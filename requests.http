@@ -1,0 +1,150 @@
+# Peticiones de ejemplo de polizas-api (IntelliJ HTTP Client / VS Code REST Client).
+# Ejecutarlas EN ORDEN sobre una aplicación recién arrancada (./mvnw spring-boot:run):
+# mismo orden y resultados esperados que la sección 8 del README.
+
+@baseUrl = http://localhost:8080
+@apiKey = 123456
+
+### 8.1 Health (público, sin API key) -> 200
+GET {{baseUrl}}/actuator/health
+
+### 8.2 Listar todas las pólizas -> 200 (5 pólizas semilla)
+GET {{baseUrl}}/polizas
+x-api-key: {{apiKey}}
+
+### 8.3 Filtrar por tipo y estado, case-insensitive -> 200 (solo la póliza 2)
+GET {{baseUrl}}/polizas?tipo=colectiva&estado=activa
+x-api-key: {{apiKey}}
+
+### 8.4 Extra EX-01: detalle de una póliza -> 200
+GET {{baseUrl}}/polizas/1
+x-api-key: {{apiKey}}
+
+### 8.5 Riesgos de una póliza -> 200 (riesgos 10 y 11)
+GET {{baseUrl}}/polizas/2/riesgos
+x-api-key: {{apiKey}}
+
+### 8.6 Renovar con el IPC configurado (0.0510) -> 200, RENOVADA, canon 1576500.00
+POST {{baseUrl}}/polizas/1/renovar
+x-api-key: {{apiKey}}
+
+### 8.7 Renovar con IPC explícito una póliza ya RENOVADA -> 200, canon 3339000.00, ipcAplicado 0.0600
+POST {{baseUrl}}/polizas/4/renovar
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "ipc": 0.06
+}
+
+### 8.8 Filtrar por estado RENOVADA -> 200 (pólizas 1 y 4)
+GET {{baseUrl}}/polizas?estado=RENOVADA
+x-api-key: {{apiKey}}
+
+### 8.9 Agregar riesgo a una colectiva -> 201, Location: /riesgos/100
+POST {{baseUrl}}/polizas/2/riesgos
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "descripcion": "Apto 703 - Cra 15 # 93-20, Bogotá",
+  "arrendatario": "Paula Rincón",
+  "arrendador": "Inversiones Andes SAS",
+  "valorCanon": 1800000.00
+}
+
+### 8.10 Cancelar un riesgo de una colectiva -> 200, CANCELADO
+POST {{baseUrl}}/riesgos/11/cancelar
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "motivo": "Terminación anticipada del contrato"
+}
+
+### 8.11 Cancelar una póliza -> 200, CANCELADA, riesgosCancelados 2
+POST {{baseUrl}}/polizas/2/cancelar
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "motivo": "Terminación del contrato de administración"
+}
+
+### 8.12 Mock del CORE -> 202 (solo registra en logs)
+POST {{baseUrl}}/core-mock/evento
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "evento": "ACTUALIZACION",
+  "polizaId": 1,
+  "operacion": "RENOVAR_POLIZA"
+}
+
+### 8.13 ERROR: renovar una póliza cancelada -> 409 POLIZA_CANCELADA_NO_RENOVABLE
+POST {{baseUrl}}/polizas/3/renovar
+x-api-key: {{apiKey}}
+
+### 8.14 ERROR: agregar riesgo a una individual -> 422 TIPO_POLIZA_NO_PERMITE_RIESGOS
+POST {{baseUrl}}/polizas/1/riesgos
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "descripcion": "Apto 101 - Calle 45 # 12-30, Medellín",
+  "arrendatario": "Carlos Pérez",
+  "arrendador": "María Restrepo",
+  "valorCanon": 900000.00
+}
+
+### 8.15 ERROR: cancelar el riesgo de una individual -> 422 RIESGO_INDIVIDUAL_NO_CANCELABLE
+POST {{baseUrl}}/riesgos/1/cancelar
+x-api-key: {{apiKey}}
+
+### 8.16 ERROR: cancelar un riesgo ya cancelado -> 409 RIESGO_YA_CANCELADO
+POST {{baseUrl}}/riesgos/22/cancelar
+x-api-key: {{apiKey}}
+
+### 8.17 ERROR: cancelar una póliza ya cancelada -> 409 POLIZA_YA_CANCELADA
+POST {{baseUrl}}/polizas/2/cancelar
+x-api-key: {{apiKey}}
+
+### 8.18 ERROR: agregar riesgo a una póliza cancelada -> 409 POLIZA_CANCELADA
+POST {{baseUrl}}/polizas/2/riesgos
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "descripcion": "Apto 904 - Cra 15 # 93-20, Bogotá",
+  "arrendatario": "Marta Ruiz",
+  "arrendador": "Inversiones Andes SAS",
+  "valorCanon": 1500000.00
+}
+
+### 8.19 ERROR: body inválido -> 400 VALIDACION (errores: descripcion, valorCanon)
+POST {{baseUrl}}/polizas/4/riesgos
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+  "descripcion": "",
+  "arrendatario": "Camila Duarte",
+  "arrendador": "Pedro Castillo",
+  "valorCanon": -5
+}
+
+### 8.20 ERROR: filtro con tipo inválido -> 400 PARAMETRO_INVALIDO
+GET {{baseUrl}}/polizas?tipo=HOGAR
+x-api-key: {{apiKey}}
+
+### 8.21 ERROR: póliza inexistente -> 404 POLIZA_NO_ENCONTRADA
+GET {{baseUrl}}/polizas/999
+x-api-key: {{apiKey}}
+
+### 8.22 ERROR: sin API key -> 401 API_KEY_INVALIDA
+GET {{baseUrl}}/polizas
+
+### 8.22b ERROR: API key incorrecta -> 401 API_KEY_INVALIDA
+GET {{baseUrl}}/polizas
+x-api-key: 000000

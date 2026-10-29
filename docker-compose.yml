@@ -1,0 +1,11 @@
+# Extra EX-04: levanta polizas-api con H2 en memoria. Uso: docker compose up --build
+services:
+  polizas-api:
+    build: .
+    image: polizas-api:local
+    container_name: polizas-api
+    ports:
+      - "8080:8080"
+    environment:
+      POLIZAS_API_KEY: ${POLIZAS_API_KEY:-123456}
+    restart: unless-stopped

@@ -1,0 +1,44 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: polizas-api
+  datasource:
+    url: jdbc:h2:mem:polizasdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate.format_sql: true
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+  h2:
+    console:
+      enabled: true
+polizas:
+  seguridad:
+    api-key: ${POLIZAS_API_KEY:123456}
+    header: x-api-key
+  ipc:
+    valor: 0.0510
+  core:
+    # Vacio = mock local en el puerto real del servidor (resuelto al enviar). En prod: URL del servicio WebLogic.
+    url: ${POLIZAS_CORE_URL:}
+    path: /core-mock/evento
+    timeout-ms: 2000
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+logging:
+  pattern:
+    console: "%d{ISO8601} %-5level [%X{correlationId:-}] %logger{36} - %msg%n"
