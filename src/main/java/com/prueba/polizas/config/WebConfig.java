@@ -10,9 +10,9 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Filtros {@code tipo}/{@code estado} case-insensitive (02c). Un valor desconocido lanza
+ * Filtros {@code tipo}/{@code estado} case-insensitive. Un valor desconocido lanza
  * {@code IllegalArgumentException}, que Spring envuelve en {@code MethodArgumentTypeMismatchException}
- * y el handler traduce a 400 {@code PARAMETRO_INVALIDO} (RN-14).
+ * y el handler traduce a 400 {@code PARAMETRO_INVALIDO}.
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

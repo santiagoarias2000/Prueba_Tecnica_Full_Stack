@@ -21,8 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 /**
- * E8 con el adapter real (sin spy): el CORE apunta a un puerto cerrado, la llamada HTTP falla con I/O,
- * el adapter lo registra en ERROR y la operacion responde 200 con el cambio persistido (RN-15).
+ * Con el adapter real (sin spy): el CORE apunta a un puerto cerrado, la llamada HTTP falla con I/O,
+ * el adapter lo registra en ERROR y la operacion responde 200 con el cambio persistido.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
         "spring.datasource.url=jdbc:h2:mem:core-caido-${random.uuid}",
@@ -30,7 +30,7 @@ import org.springframework.test.annotation.DirtiesContext;
         "polizas.core.timeout-ms=500"})
 @DirtiesContext
 @ExtendWith(OutputCaptureExtension.class)
-@DisplayName("Integracion CORE inalcanzable (02g E8; RN-15)")
+@DisplayName("Integracion CORE inalcanzable")
 class CoreInalcanzableIntegracionTest {
 
     @Autowired
@@ -40,7 +40,7 @@ class CoreInalcanzableIntegracionTest {
     private PolizaRepository polizaRepository;
 
     @Test
-    @DisplayName("E8: con el CORE inalcanzable, renovar la poliza 1 responde 200, persiste y registra [CORE-ADAPTER] en ERROR")
+    @DisplayName("con el CORE inalcanzable, renovar la poliza 1 responde 200, persiste y registra [CORE-ADAPTER] en ERROR")
     void coreInalcanzableNoAfectaLaRenovacion(CapturedOutput salida) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("x-api-key", "123456");

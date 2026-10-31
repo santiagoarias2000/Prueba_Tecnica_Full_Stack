@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Agregado raiz: poliza de arrendamiento (Individual o Colectiva) con sus riesgos.
- * Contiene las invariantes y transiciones de estado RN-01..RN-12 (ver 02b).
+ * Aqui viven las reglas de negocio: tipo de poliza, renovacion, cancelacion y recalculo de valores.
  */
 @Entity
 @Table(name = "poliza")
@@ -102,8 +102,7 @@ public class Poliza {
     }
 
     /**
-     * Crea una poliza en estado {@code ACTIVA} con sus riesgos iniciales (fecha de inicio = inicio de vigencia).
-     * RN-01: una poliza INDIVIDUAL debe tener exactamente un riesgo.
+     * Crea una poliza ACTIVA con sus riesgos iniciales. Si es individual debe venir con un solo riesgo.
      */
     public static Poliza nueva(String numeroPoliza, TipoPoliza tipo, String tomador, LocalDate fechaInicioVigencia,
                                int mesesVigencia, List<DatosRiesgo> riesgos) {
@@ -137,10 +136,8 @@ public class Poliza {
     }
 
     /**
-     * Agrega un riesgo ACTIVO y recalcula canon y prima.
-     * RN-04/RN-01: solo COLECTIVA ({@code TIPO_POLIZA_NO_PERMITE_RIESGOS});
-     * RN-08: no sobre una poliza CANCELADA ({@code POLIZA_CANCELADA}); RN-12: recalculo.
-     * El riesgo inicia hoy, o en el inicio de vigencia si este es posterior.
+     * Agrega un riesgo y recalcula canon y prima. Solo aplica a colectivas que no esten canceladas.
+     * El riesgo empieza hoy, o en el inicio de vigencia si todavia no ha llegado.
      */
     public Riesgo agregarRiesgo(String descripcion, String arrendatario, String arrendador, BigDecimal canon) {
         if (tipo != TipoPoliza.COLECTIVA) {
@@ -161,8 +158,7 @@ public class Poliza {
 
     /**
      * Renueva por el mismo periodo: canon de cada riesgo activo x (1 + IPC), prima = canon x meses,
-     * nueva vigencia desde el dia siguiente a la fecha fin, estado RENOVADA.
-     * RN-02: una poliza CANCELADA no es renovable; RN-06: ACTIVA o RENOVADA si.
+     * nueva vigencia desde el dia siguiente a la fecha fin y estado RENOVADA. Una cancelada no se renueva.
      */
     public void renovar(BigDecimal ipc) {
         Objects.requireNonNull(ipc, "ipc");
@@ -177,7 +173,7 @@ public class Poliza {
     }
 
     /**
-     * Cancela la poliza y todos sus riesgos activos (RN-03). RN-07: no se cancela dos veces.
+     * Cancela la poliza y todos sus riesgos activos. Una poliza ya cancelada no se vuelve a cancelar.
      * Canon y prima se conservan como registro historico.
      *
      * @return numero de riesgos cancelados
@@ -199,9 +195,8 @@ public class Poliza {
     }
 
     /**
-     * Cancela un riesgo de esta poliza y recalcula canon y prima (RN-12).
-     * RN-11: poliza CANCELADA → {@code RIESGO_YA_CANCELADO}; RN-10: INDIVIDUAL →
-     * {@code RIESGO_INDIVIDUAL_NO_CANCELABLE}; RN-09: riesgo ya cancelado → {@code RIESGO_YA_CANCELADO}.
+     * Cancela un riesgo de esta poliza y recalcula canon y prima. En una individual el riesgo
+     * no se cancela por separado: hay que cancelar la poliza.
      */
     public void cancelarRiesgo(Riesgo riesgo, String motivo) {
         if (riesgo == null || !riesgos.contains(riesgo)) {
@@ -221,7 +216,7 @@ public class Poliza {
     }
 
     /**
-     * RN-12 / S11: COLECTIVA → canon = suma de canones de riesgos ACTIVOS (cada uno ya redondeado);
+     * COLECTIVA → canon = suma de canones de riesgos ACTIVOS (cada uno ya redondeado);
      * INDIVIDUAL → canon = canon de su riesgo. Prima = canon x meses de vigencia.
      */
     public void recalcularValores() {

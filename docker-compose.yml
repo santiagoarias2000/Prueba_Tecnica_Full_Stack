@@ -1,4 +1,4 @@
-# Extra EX-04: levanta polizas-api con H2 en memoria. Uso: docker compose up --build
+# Levanta polizas-api con H2 en memoria. Uso: docker compose up --build
 services:
   polizas-api:
     build: .

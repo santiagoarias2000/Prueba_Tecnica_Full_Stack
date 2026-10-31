@@ -29,15 +29,15 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 /**
- * Casos E1-E6 de 02g: flujos end-to-end sobre los datos semilla (data.sql) a traves de toda la pila
+ * Flujos end-to-end sobre los datos semilla (data.sql) a traves de toda la pila
  * (filtros, controller, servicio, JPA, H2). Cada test usa una base H2 propia y un contexto nuevo
  * ({@link DirtiesContext}) para no depender del orden. El puerto del CORE se sustituye por un mock
- * porque su comportamiento ya se cubre en {@link CoreIntegracionTest} (E7, E8).
+ * porque su comportamiento ya se cubre en {@link CoreIntegracionTest}.
  */
 @SpringBootTest(properties = "spring.datasource.url=jdbc:h2:mem:it-${random.uuid}")
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@DisplayName("Integracion end-to-end sobre datos semilla (02g E1-E6)")
+@DisplayName("Integracion end-to-end sobre datos semilla")
 class PolizasApiIntegrationTest {
 
     private static final String API_KEY_HEADER = "x-api-key";
@@ -65,7 +65,7 @@ class PolizasApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("E1: renovar la poliza 1 la deja RENOVADA con canon 1.576.500, prima 18.918.000 y vigencia 2027")
+    @DisplayName("renovar la poliza 1 la deja RENOVADA con canon 1.576.500, prima 18.918.000 y vigencia 2027")
     void renovarPoliza1ApareceEnListadoDeRenovadas() throws Exception {
         ejecutar(post("/polizas/1/renovar"))
                 .andExpect(status().isOk())
@@ -91,7 +91,7 @@ class PolizasApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("E2: renovar la poliza 3 (CANCELADA) responde 409 POLIZA_CANCELADA_NO_RENOVABLE y no cambia")
+    @DisplayName("renovar la poliza 3 (CANCELADA) responde 409 POLIZA_CANCELADA_NO_RENOVABLE y no cambia")
     void renovarPolizaCanceladaResponde409() throws Exception {
         ejecutar(post("/polizas/3/renovar"))
                 .andExpect(status().isConflict())
@@ -109,7 +109,7 @@ class PolizasApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("E3: agregar riesgo a la poliza 2 responde 201 + Location; quedan 3 riesgos y canon/prima recalculados")
+    @DisplayName("agregar riesgo a la poliza 2 responde 201 + Location; quedan 3 riesgos y canon/prima recalculados")
     void agregarRiesgoAPolizaColectiva() throws Exception {
         JsonNode creado = leer(postJson("/polizas/2/riesgos",
                 "{\"descripcion\":\"Apto 703 - Cra 15 # 93-20, Bogotá\",\"arrendatario\":\"Paula Ríos\","
@@ -127,7 +127,7 @@ class PolizasApiIntegrationTest {
                 .andExpect(jsonPath("$[*].id", hasItem((int) riesgoId)))
                 .andExpect(jsonPath("$[*].estado", not(hasItem("CANCELADO"))));
 
-        // RN-12: 2.000.000 + 1.200.000 + 1.800.000 = 5.000.000; prima = canon x 6 meses
+        // 2.000.000 + 1.200.000 + 1.800.000 = 5.000.000; prima = canon x 6 meses
         JsonNode poliza = leer(ejecutar(get("/polizas/2")).andExpect(status().isOk()));
         assertThat(poliza.get("valorCanon").decimalValue()).isEqualByComparingTo("5000000.00");
         assertThat(poliza.get("valorPrima").decimalValue())
@@ -136,7 +136,7 @@ class PolizasApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("E3: el header Location del 201 apunta a /riesgos/{idCreado}")
+    @DisplayName("el header Location del 201 apunta a /riesgos/{idCreado}")
     void agregarRiesgoDevuelveLocation() throws Exception {
         ResultActions resultado = postJson("/polizas/2/riesgos",
                 "{\"descripcion\":\"Local 1\",\"arrendatario\":\"A\",\"arrendador\":\"B\",\"valorCanon\":1000000}")
@@ -146,7 +146,7 @@ class PolizasApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("E4: agregar riesgo a la poliza individual 1 responde 422 TIPO_POLIZA_NO_PERMITE_RIESGOS y sigue con 1 riesgo")
+    @DisplayName("agregar riesgo a la poliza individual 1 responde 422 TIPO_POLIZA_NO_PERMITE_RIESGOS y sigue con 1 riesgo")
     void agregarRiesgoAPolizaIndividualResponde422() throws Exception {
         postJson("/polizas/1/riesgos",
                 "{\"descripcion\":\"Local 1\",\"arrendatario\":\"A\",\"arrendador\":\"B\",\"valorCanon\":1000000}")
@@ -166,7 +166,7 @@ class PolizasApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("E5: cancelar la poliza 2 responde 200 CANCELADA con riesgosCancelados=2 y todos sus riesgos CANCELADO")
+    @DisplayName("cancelar la poliza 2 responde 200 CANCELADA con riesgosCancelados=2 y todos sus riesgos CANCELADO")
     void cancelarPolizaCancelaTodosSusRiesgos() throws Exception {
         LocalDate antes = LocalDate.now();
         postJson("/polizas/2/cancelar", "{\"motivo\":\"Solicitud del tomador\"}")
@@ -190,7 +190,7 @@ class PolizasApiIntegrationTest {
     }
 
     @Test
-    @DisplayName("E6: cancelar el riesgo 21 de la poliza 4 responde 200 CANCELADO; canon = 1.800.000 y prima = canon x 12")
+    @DisplayName("cancelar el riesgo 21 de la poliza 4 responde 200 CANCELADO; canon = 1.800.000 y prima = canon x 12")
     void cancelarRiesgoRecalculaCanonDeLaPoliza() throws Exception {
         ejecutar(get("/polizas/4"))
                 .andExpect(jsonPath("$.cantidadRiesgosActivos").value(2))
@@ -203,7 +203,7 @@ class PolizasApiIntegrationTest {
                 .andExpect(jsonPath("$.estado").value("CANCELADO"))
                 .andExpect(jsonPath("$.fechaCancelacion").isNotEmpty());
 
-        // RN-12: solo queda activo el riesgo 20 (1.800.000); prima = 1.800.000 x 12 meses
+        // solo queda activo el riesgo 20 (1.800.000); prima = 1.800.000 x 12 meses
         JsonNode poliza = leer(ejecutar(get("/polizas/4")).andExpect(status().isOk()));
         assertThat(poliza.get("estado").asText()).isEqualTo("RENOVADA");
         assertThat(poliza.get("valorCanon").decimalValue()).isEqualByComparingTo("1800000.00");

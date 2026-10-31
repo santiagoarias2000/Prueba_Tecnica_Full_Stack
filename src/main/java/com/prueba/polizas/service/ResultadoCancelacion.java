@@ -7,7 +7,7 @@ import com.prueba.polizas.model.Poliza;
  *
  * @param poliza                 poliza cancelada
  * @param cantidadRiesgosActivos riesgos activos tras la cancelacion (siempre 0)
- * @param riesgosCancelados      riesgos que estaban activos y se cancelaron (RN-03)
+ * @param riesgosCancelados      riesgos que estaban activos y se cancelaron
  */
 public record ResultadoCancelacion(Poliza poliza, long cantidadRiesgosActivos, int riesgosCancelados) {
 }

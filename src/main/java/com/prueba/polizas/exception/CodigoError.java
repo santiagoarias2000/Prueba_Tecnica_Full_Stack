@@ -3,7 +3,7 @@ package com.prueba.polizas.exception;
 import org.springframework.http.HttpStatus;
 
 /**
- * Codigos de error expuestos en el campo {@code codigo} del {@code ProblemDetail} (ver 02b / 02c).
+ * Codigos de error expuestos en el campo {@code codigo} del {@code ProblemDetail}.
  */
 public enum CodigoError {
     POLIZA_INDIVIDUAL_UN_RIESGO(HttpStatus.UNPROCESSABLE_ENTITY),

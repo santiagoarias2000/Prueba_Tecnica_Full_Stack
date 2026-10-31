@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# Extra EX-04: imagen multi-stage de polizas-api (Java 17).
+# Imagen multi-stage de polizas-api (Java 17).
 
 # ---------- Etapa 1: build ----------
 FROM eclipse-temurin:17-jdk AS build

@@ -7,9 +7,9 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
- * Notifica al CORE cada {@link CambioEstadoEvent} despues del commit (02e). Es sincrono, en el mismo hilo
+ * Notifica al CORE cada {@link CambioEstadoEvent} despues del commit. Es sincrono, en el mismo hilo
  * de la peticion (el MDC con el correlationId sigue disponible). Ninguna excepcion sale de aqui: la operacion
- * local ya esta confirmada y la respuesta HTTP no depende del CORE (RN-15).
+ * local ya esta confirmada y la respuesta HTTP no depende del CORE.
  */
 @Component
 public class CoreEventListener {

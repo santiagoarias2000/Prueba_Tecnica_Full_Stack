@@ -29,7 +29,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
- * Traduce excepciones a {@link ProblemDetail} ({@code application/problem+json}) con el formato de 02c.
+ * Traduce excepciones a {@link ProblemDetail} ({@code application/problem+json}).
  * Extiende {@link ResponseEntityExceptionHandler} para cubrir de forma uniforme las excepciones estandar
  * de Spring MVC (405, 415, ...), sobreescribiendo las que tienen codigo propio.
  */
@@ -129,7 +129,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "Content-Type no soportado; use application/json", uri(request)));
     }
 
-    /** Resto de excepciones estandar de Spring MVC: se normalizan al formato de 02c. */
+    /** Resto de excepciones estandar de Spring MVC: se devuelven con el mismo formato. */
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
                                                              HttpStatusCode statusCode, WebRequest request) {

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * Representacion de una poliza (RF-01). {@code ipcAplicado} solo aparece al renovar y
+ * Representacion de una poliza. {@code ipcAplicado} solo aparece al renovar y
  * {@code riesgosCancelados} solo al cancelar; en el resto de respuestas se omiten.
  */
 public record PolizaResponse(

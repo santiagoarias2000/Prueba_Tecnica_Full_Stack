@@ -25,7 +25,7 @@ import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
 /**
- * Seguridad minima (02f): exige el header configurado ({@code x-api-key}) con el valor esperado,
+ * Seguridad minima: exige el header configurado ({@code x-api-key}) con el valor esperado,
  * comparando en tiempo constante. Si falla responde 401 {@code API_KEY_INVALIDA} y corta la cadena.
  * Nunca registra el valor recibido.
  */

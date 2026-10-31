@@ -42,7 +42,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("PolizaServiceImpl (02g seccion B)")
+@DisplayName("PolizaServiceImpl")
 class PolizaServiceImplTest {
 
     private static final BigDecimal IPC = new BigDecimal("0.0510");
@@ -110,7 +110,7 @@ class PolizaServiceImplTest {
     }
 
     @Nested
-    @DisplayName("S1 - poliza inexistente")
+    @DisplayName("poliza inexistente")
     class PolizaInexistente {
 
         private void assertNoEncontrada(Runnable accion) {
@@ -155,7 +155,7 @@ class PolizaServiceImplTest {
     }
 
     @Nested
-    @DisplayName("S2 - renovar usa IpcProvider")
+    @DisplayName("renovar usa IpcProvider")
     class RenovarConIpc {
 
         @Test
@@ -203,7 +203,7 @@ class PolizaServiceImplTest {
     }
 
     @Nested
-    @DisplayName("S3 - cada cambio de estado publica CambioEstadoEvent con la operacion correcta")
+    @DisplayName("cada cambio de estado publica CambioEstadoEvent con la operacion correcta")
     class PublicaEvento {
 
         @Test
@@ -254,7 +254,7 @@ class PolizaServiceImplTest {
     }
 
     @Nested
-    @DisplayName("S4 - operacion fallida por regla no publica evento")
+    @DisplayName("operacion fallida por regla no publica evento")
     class FalloNoPublica {
 
         @Test
@@ -312,7 +312,7 @@ class PolizaServiceImplTest {
     }
 
     @Nested
-    @DisplayName("S5 - listar con filtros")
+    @DisplayName("listar con filtros")
     class Listar {
 
         @Test
@@ -368,7 +368,7 @@ class PolizaServiceImplTest {
     }
 
     @Nested
-    @DisplayName("Extra EX-01 - obtener detalle")
+    @DisplayName("obtener detalle")
     class Obtener {
 
         @Test

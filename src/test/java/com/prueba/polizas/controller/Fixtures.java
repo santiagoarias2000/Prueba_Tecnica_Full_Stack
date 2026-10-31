@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.test.util.ReflectionTestUtils;
 
-/** Entidades de dominio con ids asignados, con los valores de la tabla de ejemplos de 02b / semilla 02d. */
+/** Entidades de dominio con ids asignados, con los mismos valores de data.sql. */
 final class Fixtures {
 
     static final String API_KEY_HEADER = "x-api-key";

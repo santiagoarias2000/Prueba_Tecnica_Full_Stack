@@ -15,9 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
-/** Listener AFTER_COMMIT y construccion del payload enviado al CORE (02e, RN-15). */
+/** Listener AFTER_COMMIT y construccion del payload enviado al CORE. */
 @ExtendWith(OutputCaptureExtension.class)
-@DisplayName("CoreEventListener y CoreEventoPayload (02e, RN-15)")
+@DisplayName("CoreEventListener y CoreEventoPayload")
 class CoreEventListenerTest {
 
     private final CoreEdicionPort puerto = mock(CoreEdicionPort.class);
@@ -32,7 +32,7 @@ class CoreEventListenerTest {
     }
 
     @Test
-    @DisplayName("RN-15: si el puerto lanza RuntimeException, el listener la registra en [CORE-LISTENER] y no la propaga")
+    @DisplayName("si el puerto lanza RuntimeException, el listener la registra en [CORE-LISTENER] y no la propaga")
     void noDebePropagarFallosDelPuerto(CapturedOutput salida) {
         doThrow(new IllegalStateException("CORE caido")).when(puerto).notificar(any());
 

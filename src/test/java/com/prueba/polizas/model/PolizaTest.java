@@ -18,7 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Poliza - reglas de dominio (02g seccion A)")
+@DisplayName("Poliza - reglas de dominio")
 class PolizaTest {
 
     private static final BigDecimal IPC = new BigDecimal("0.0510");
@@ -64,7 +64,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D11 - Individual con 2 riesgos es una construccion invalida (RN-01)")
+        @DisplayName("Individual con 2 riesgos es una construccion invalida")
         void debeRechazarIndividualConDosRiesgos() {
             List<DatosRiesgo> dosRiesgos = List.of(datos("1000000"), datos("2000000"));
 
@@ -75,7 +75,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("Individual sin riesgo tambien viola RN-01")
+        @DisplayName("Individual sin riesgo tambien se rechaza")
         void debeRechazarIndividualSinRiesgo() {
             assertThatThrownBy(() -> Poliza.nueva("IND-TEST-0003", TipoPoliza.INDIVIDUAL, "Carlos Perez",
                     INICIO_2026, 12, List.of()))
@@ -109,7 +109,7 @@ class PolizaTest {
     class Renovacion {
 
         @Test
-        @DisplayName("D1 - Renovar individual 1.500.000 x 12 meses con IPC 5,10 %")
+        @DisplayName("Renovar individual 1.500.000 x 12 meses con IPC 5,10 %")
         void debeRenovarIndividualAjustandoCanonPrimaYVigencia() {
             Poliza poliza = individual("1500000.00");
 
@@ -124,7 +124,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D2 - Renovar colectiva 2.000.000 + 1.200.000 x 6 meses")
+        @DisplayName("Renovar colectiva 2.000.000 + 1.200.000 x 6 meses")
         void debeRenovarColectivaAjustandoCadaRiesgo() {
             Poliza poliza = colectiva(6, "2000000.00", "1200000.00");
 
@@ -139,7 +139,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D3 - Redondeo HALF_UP: 1.234.567,89 x 1,051 = 1.297.530,85 y prima 15.570.370,20")
+        @DisplayName("Redondeo HALF_UP: 1.234.567,89 x 1,051 = 1.297.530,85 y prima 15.570.370,20")
         void debeRedondearHalfUpADosDecimales() {
             Poliza poliza = individual("1234567.89");
 
@@ -150,7 +150,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D4 - No se puede renovar una poliza CANCELADA (RN-02)")
+        @DisplayName("No se puede renovar una poliza CANCELADA")
         void debeRechazarRenovacionCuandoPolizaEstaCancelada() {
             Poliza poliza = individual("1500000");
             poliza.cancelar("Solicitud del tomador");
@@ -161,7 +161,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D5 - Se puede renovar una poliza RENOVADA (RN-06)")
+        @DisplayName("Se puede renovar una poliza RENOVADA")
         void debePermitirRenovarPolizaRenovada() {
             Poliza poliza = individual("1500000.00");
             poliza.renovar(IPC);
@@ -175,7 +175,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("Renovar colectiva no ajusta los riesgos cancelados (S9)")
+        @DisplayName("Renovar colectiva no ajusta los riesgos cancelados")
         void debeAjustarSoloRiesgosActivos() {
             Poliza poliza = colectiva(6, "2000000.00", "1200000.00");
             Riesgo cancelado = poliza.getRiesgos().get(1);
@@ -201,7 +201,7 @@ class PolizaTest {
     class CancelacionPoliza {
 
         @Test
-        @DisplayName("D6 - Cancelar colectiva con 3 riesgos activos cancela todos y retorna 3 (RN-03)")
+        @DisplayName("Cancelar colectiva con 3 riesgos activos cancela todos y retorna 3")
         void debeCancelarTodosLosRiesgosAlCancelarPoliza() {
             Poliza poliza = colectiva(12, "1000000", "2000000", "3000000");
 
@@ -227,7 +227,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D7 - Cancelar una poliza ya CANCELADA (RN-07)")
+        @DisplayName("Cancelar una poliza ya CANCELADA")
         void debeRechazarCancelarPolizaYaCancelada() {
             Poliza poliza = individual("1500000");
             poliza.cancelar("Primera");
@@ -243,7 +243,7 @@ class PolizaTest {
     class AgregarRiesgo {
 
         @Test
-        @DisplayName("D8 - Agregar riesgo a INDIVIDUAL no esta permitido (RN-04)")
+        @DisplayName("Agregar riesgo a INDIVIDUAL no esta permitido")
         void debeRechazarAgregarRiesgoAIndividual() {
             Poliza poliza = individual("1500000");
 
@@ -254,7 +254,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D9 - Agregar riesgo a COLECTIVA activa recalcula canon y prima (RN-12)")
+        @DisplayName("Agregar riesgo a COLECTIVA activa recalcula canon y prima")
         void debeAgregarRiesgoAColectivaYRecalcular() {
             Poliza poliza = colectiva(6, "2000000.00", "1200000.00");
 
@@ -282,7 +282,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D10 - Agregar riesgo a COLECTIVA cancelada (RN-08)")
+        @DisplayName("Agregar riesgo a COLECTIVA cancelada")
         void debeRechazarAgregarRiesgoAColectivaCancelada() {
             Poliza poliza = colectiva(6, "2000000");
             poliza.cancelar("Cierre");
@@ -298,7 +298,7 @@ class PolizaTest {
     class CancelacionRiesgo {
 
         @Test
-        @DisplayName("D12 - Cancelar riesgo de colectiva: canon de poliza = suma de los restantes (RN-12)")
+        @DisplayName("Cancelar riesgo de colectiva: canon de poliza = suma de los restantes")
         void debeCancelarRiesgoDeColectivaYRecalcular() {
             Poliza poliza = colectiva(6, "2000000.00", "1200000.00");
             Riesgo riesgo = poliza.getRiesgos().get(0);
@@ -315,7 +315,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("Cancelar el ultimo riesgo activo no cancela la poliza (S7)")
+        @DisplayName("Cancelar el ultimo riesgo activo no cancela la poliza")
         void debeMantenerPolizaActivaAlCancelarUltimoRiesgo() {
             Poliza poliza = colectiva(6, "2000000.00");
 
@@ -327,7 +327,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D13 - Cancelar riesgo ya CANCELADO (RN-09)")
+        @DisplayName("Cancelar riesgo ya CANCELADO")
         void debeRechazarCancelarRiesgoYaCancelado() {
             Poliza poliza = colectiva(6, "2000000", "1200000");
             Riesgo riesgo = poliza.getRiesgos().get(0);
@@ -339,7 +339,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("D14 - Cancelar riesgo de INDIVIDUAL de forma aislada (RN-10)")
+        @DisplayName("Cancelar riesgo de INDIVIDUAL de forma aislada")
         void debeRechazarCancelarRiesgoDeIndividual() {
             Poliza poliza = individual("1500000");
             Riesgo riesgo = poliza.getRiesgos().get(0);
@@ -351,7 +351,7 @@ class PolizaTest {
         }
 
         @Test
-        @DisplayName("Cancelar riesgo de una poliza CANCELADA responde RIESGO_YA_CANCELADO (RN-11)")
+        @DisplayName("Cancelar riesgo de una poliza CANCELADA responde RIESGO_YA_CANCELADO")
         void debeRechazarCancelarRiesgoDePolizaCancelada() {
             Poliza poliza = individual("1500000");
             Riesgo riesgo = poliza.getRiesgos().get(0);

@@ -13,13 +13,13 @@ public interface PolizaService {
     /** Lista polizas filtrando por tipo y/o estado ({@code null} = sin filtro), con su conteo de riesgos activos. */
     List<PolizaConConteo> listar(TipoPoliza tipo, EstadoPoliza estado);
 
-    /** Extra EX-01: detalle de una poliza con su conteo de riesgos activos. 404 {@code POLIZA_NO_ENCONTRADA}. */
+    /** Detalle de una poliza con su conteo de riesgos activos. 404 {@code POLIZA_NO_ENCONTRADA}. */
     PolizaConConteo obtener(Long polizaId);
 
     /** Riesgos de una poliza ordenados por id. 404 {@code POLIZA_NO_ENCONTRADA} si no existe. */
     List<Riesgo> listarRiesgos(Long polizaId);
 
-    /** Renueva la poliza con el IPC vigente (RN-05, RN-02, RN-06). */
+    /** Renueva la poliza con el IPC vigente. */
     ResultadoRenovacion renovar(Long polizaId);
 
     /**
@@ -28,9 +28,9 @@ public interface PolizaService {
      */
     ResultadoRenovacion renovar(Long polizaId, BigDecimal ipcOverride);
 
-    /** Cancela la poliza y todos sus riesgos activos (RN-03, RN-07). */
+    /** Cancela la poliza y todos sus riesgos activos. */
     ResultadoCancelacion cancelar(Long polizaId, String motivo);
 
-    /** Agrega un riesgo a una poliza COLECTIVA no cancelada (RN-04, RN-08, RN-12) y devuelve el riesgo con id. */
+    /** Agrega un riesgo a una poliza COLECTIVA no cancelada y devuelve el riesgo con id. */
     Riesgo agregarRiesgo(Long polizaId, DatosRiesgo datos);
 }

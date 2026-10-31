@@ -26,13 +26,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 /**
- * Casos X1-X3 de 02g con el contexto completo (cadena de filtros real). Ningun test modifica datos:
+ * Pruebas del filtro con el contexto completo (cadena de filtros real). Ningun test modifica datos:
  * las peticiones mutantes se rechazan con 401 antes de llegar al controller, y las autorizadas son GET.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith(OutputCaptureExtension.class)
-@DisplayName("ApiKeyFilter (02g seccion D)")
+@DisplayName("ApiKeyFilter")
 class ApiKeyFilterTest {
 
     @Autowired
@@ -49,7 +49,7 @@ class ApiKeyFilterTest {
             "POST, /core-mock/evento",
             "GET, /ruta-inexistente"
     })
-    @DisplayName("X1: sin x-api-key cualquier endpoint responde 401 API_KEY_INVALIDA en problem+json")
+    @DisplayName("sin x-api-key cualquier endpoint responde 401 API_KEY_INVALIDA en problem+json")
     void debeRechazarSolicitudSinApiKey(String metodo, String ruta) throws Exception {
         mockMvc.perform(request(HttpMethod.valueOf(metodo), ruta).contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
@@ -68,7 +68,7 @@ class ApiKeyFilterTest {
 
     @ParameterizedTest(name = "x-api-key=''{0}''")
     @ValueSource(strings = {"000", "", " 123456", "123456 ", "1234567", "12345"})
-    @DisplayName("X2: x-api-key con valor incorrecto responde 401 API_KEY_INVALIDA")
+    @DisplayName("x-api-key con valor incorrecto responde 401 API_KEY_INVALIDA")
     void debeRechazarApiKeyIncorrecta(String clave) throws Exception {
         mockMvc.perform(get("/polizas").header("x-api-key", clave))
                 .andExpect(status().isUnauthorized())
@@ -87,13 +87,13 @@ class ApiKeyFilterTest {
 
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = {"/v3/api-docs", "/swagger-ui/index.html", "/actuator/health"})
-    @DisplayName("X3: Swagger, OpenAPI y health son publicos (200 sin header)")
+    @DisplayName("Swagger, OpenAPI y health son publicos (200 sin header)")
     void debePermitirRutasPublicasSinApiKey(String ruta) throws Exception {
         mockMvc.perform(get(ruta)).andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("X3: /swagger-ui.html sin header no responde 401 (redirige a la UI)")
+    @DisplayName("/swagger-ui.html sin header no responde 401 (redirige a la UI)")
     void debePermitirSwaggerUiHtmlSinApiKey() throws Exception {
         MvcResult resultado = mockMvc.perform(get("/swagger-ui.html")).andReturn();
         assertThat(resultado.getResponse().getStatus()).isNotEqualTo(401).isLessThan(400);
@@ -107,7 +107,7 @@ class ApiKeyFilterTest {
     }
 
     @Test
-    @DisplayName("X3: el documento OpenAPI declara el esquema de seguridad x-api-key")
+    @DisplayName("el documento OpenAPI declara el esquema de seguridad x-api-key")
     void debeDocumentarEsquemaApiKeyEnOpenApi() throws Exception {
         mockMvc.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk())

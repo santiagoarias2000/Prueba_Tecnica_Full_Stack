@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 
 /**
- * Construye los {@link ProblemDetail} (RFC 7807) con el formato de 02c: {@code type}, {@code title},
+ * Construye los {@link ProblemDetail} (RFC 7807) con el formato de error de la API: {@code type}, {@code title},
  * {@code status}, {@code detail}, {@code instance} y las propiedades {@code codigo}, {@code timestamp}
  * y {@code correlationId}. Lo usan el {@link GlobalExceptionHandler} y el {@code ApiKeyFilter}.
  */
@@ -43,7 +43,7 @@ public final class ProblemDetailFactory {
         return problem;
     }
 
-    /** Titulo segun la tabla de 02c. */
+    /** Titulo legible para cada codigo HTTP. */
     static String titulo(HttpStatusCode status, String codigo) {
         return switch (status.value()) {
             case 400 -> "Solicitud inválida";

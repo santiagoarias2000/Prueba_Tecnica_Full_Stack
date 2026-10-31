@@ -36,7 +36,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith({MockitoExtension.class, OutputCaptureExtension.class})
-@DisplayName("RiesgoServiceImpl (02g seccion B)")
+@DisplayName("RiesgoServiceImpl")
 class RiesgoServiceImplTest {
 
     private static final Long POLIZA_ID = 2L;
@@ -82,7 +82,7 @@ class RiesgoServiceImplTest {
     }
 
     @Test
-    @DisplayName("S3 - cancelar riesgo publica CANCELAR_RIESGO con polizaId y riesgoId y recalcula la poliza")
+    @DisplayName("cancelar riesgo publica CANCELAR_RIESGO con polizaId y riesgoId y recalcula la poliza")
     void cancelaYPublica() {
         Poliza poliza = colectiva("2000000", "1200000");
         Riesgo riesgo = dadoElRiesgo(poliza, 0);
@@ -101,7 +101,7 @@ class RiesgoServiceImplTest {
     }
 
     @Test
-    @DisplayName("S7 - cancelar el ultimo riesgo activo de una colectiva loguea WARN y no cancela la poliza")
+    @DisplayName("cancelar el ultimo riesgo activo de una colectiva loguea WARN y no cancela la poliza")
     void ultimoRiesgoActivoLogueaWarn(CapturedOutput output) {
         Poliza poliza = colectiva("2000000");
         dadoElRiesgo(poliza, 0);

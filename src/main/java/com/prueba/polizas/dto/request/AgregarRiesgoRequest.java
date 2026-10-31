@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 /**
- * Body de {@code POST /polizas/{id}/riesgos} (RF-05).
+ * Body de {@code POST /polizas/{id}/riesgos}.
  *
  * @param descripcion  direccion / identificacion del inmueble
  * @param arrendatario asegurado

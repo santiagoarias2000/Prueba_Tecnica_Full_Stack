@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Mock del servicio agnostico de edicion del CORE (capa media WebLogic), RF-07.
+ * Mock del servicio agnostico de edicion del CORE (capa media WebLogic).
  * Unico proposito: registrar en logs el intento de envio. No persiste ni tiene logica.
  */
 @RestController

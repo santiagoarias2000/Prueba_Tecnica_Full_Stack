@@ -34,10 +34,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-/** Casos C5 de 02g sobre {@code POST /riesgos/{id}/cancelar} (RF-06). */
+/** Pruebas de {@code POST /riesgos/{id}/cancelar}. */
 @WebMvcTest(controllers = {PolizaController.class, RiesgoController.class})
 @EnableConfigurationProperties(PolizasProperties.class)
-@DisplayName("RiesgoController (02g seccion C, RF-06)")
+@DisplayName("RiesgoController")
 class RiesgoControllerTest {
 
     private static final String TYPE_BASE = "https://api.polizas.local/errores/";
@@ -109,7 +109,7 @@ class RiesgoControllerTest {
     }
 
     @Test
-    @DisplayName("C5: riesgo inexistente responde 404 RIESGO_NO_ENCONTRADO")
+    @DisplayName("riesgo inexistente responde 404 RIESGO_NO_ENCONTRADO")
     void debeResponder404CuandoRiesgoNoExiste() throws Exception {
         when(riesgoService.cancelar(eq(999L), isNull())).thenThrow(new RecursoNoEncontradoException(
                 CodigoError.RIESGO_NO_ENCONTRADO, "No existe el riesgo 999"));
@@ -119,7 +119,7 @@ class RiesgoControllerTest {
     }
 
     @Test
-    @DisplayName("C5: riesgo ya cancelado responde 409 RIESGO_YA_CANCELADO")
+    @DisplayName("riesgo ya cancelado responde 409 RIESGO_YA_CANCELADO")
     void debeRechazarCancelarRiesgoYaCancelado() throws Exception {
         when(riesgoService.cancelar(eq(22L), isNull())).thenThrow(new EstadoInvalidoException(
                 CodigoError.RIESGO_YA_CANCELADO, "El riesgo 22 ya se encuentra cancelado"));
@@ -129,7 +129,7 @@ class RiesgoControllerTest {
     }
 
     @Test
-    @DisplayName("C5: riesgo de poliza individual responde 422 RIESGO_INDIVIDUAL_NO_CANCELABLE")
+    @DisplayName("riesgo de poliza individual responde 422 RIESGO_INDIVIDUAL_NO_CANCELABLE")
     void debeRechazarCancelarRiesgoDeIndividual() throws Exception {
         when(riesgoService.cancelar(eq(1L), isNull())).thenThrow(new ReglaNegocioException(
                 CodigoError.RIESGO_INDIVIDUAL_NO_CANCELABLE,

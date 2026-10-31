@@ -1,4 +1,4 @@
--- Esquema H2 de polizas-api (02d). Hibernate solo lo valida (ddl-auto: validate).
+-- Esquema H2 de polizas-api. Hibernate solo lo valida (ddl-auto: validate).
 DROP TABLE IF EXISTS riesgo;
 DROP TABLE IF EXISTS poliza;
 

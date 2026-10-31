@@ -87,9 +87,7 @@ public class Riesgo {
         return estado == EstadoRiesgo.ACTIVO;
     }
 
-    /**
-     * Cancela el riesgo con fecha de hoy (RN-09: un riesgo ya cancelado no se vuelve a cancelar).
-     */
+    /** Cancela el riesgo con fecha de hoy. Si ya estaba cancelado lanza RIESGO_YA_CANCELADO. */
     void cancelar(String motivo) {
         if (!estaActivo()) {
             throw new EstadoInvalidoException(CodigoError.RIESGO_YA_CANCELADO,
@@ -100,7 +98,7 @@ public class Riesgo {
         this.motivoCancelacion = motivo;
     }
 
-    /** Ajusta el canon por IPC: {@code canon x (1 + ipc)}, escala 2 HALF_UP (RN-05, S9). */
+    /** Ajusta el canon por IPC: {@code canon x (1 + ipc)}, escala 2 HALF_UP. */
     void ajustarCanon(BigDecimal ipc) {
         this.valorCanon = Dinero.ajustarPorIpc(valorCanon, ipc);
     }

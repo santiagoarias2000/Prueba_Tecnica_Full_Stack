@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Body de {@code POST /core-mock/evento} (RF-07). {@code operacion} y {@code riesgoId} son opcionales.
+ * Body de {@code POST /core-mock/evento}. {@code operacion} y {@code riesgoId} son opcionales.
  *
  * @param evento    tipo de evento (p. ej. {@code ACTUALIZACION})
  * @param polizaId  poliza afectada

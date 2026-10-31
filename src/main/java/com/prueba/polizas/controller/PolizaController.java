@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Endpoints de polizas (RF-01..RF-05 y extra EX-01). */
+/** Endpoints de polizas. */
 @RestController
 @RequestMapping("/polizas")
 @Tag(name = "Pólizas", description = "Consulta, renovación, cancelación y riesgos de pólizas")
@@ -47,7 +47,7 @@ public class PolizaController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Extra EX-01: detalle de una póliza (mismo contrato que RF-01)")
+    @Operation(summary = "Detalle de una póliza")
     public PolizaResponse obtener(@PathVariable Long id) {
         return PolizaMapper.aResponse(polizaService.obtener(id));
     }

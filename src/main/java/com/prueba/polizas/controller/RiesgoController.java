@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Endpoints de riesgos (RF-06). */
+/** Endpoints de riesgos. */
 @RestController
 @RequestMapping("/riesgos")
 @Tag(name = "Riesgos", description = "Operaciones sobre riesgos individuales")

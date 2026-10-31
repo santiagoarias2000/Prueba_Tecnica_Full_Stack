@@ -24,11 +24,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-/** Casos C6 y C7 de 02g sobre {@code POST /core-mock/evento} (RF-07). */
+/** Pruebas de {@code POST /core-mock/evento}. */
 @WebMvcTest(controllers = CoreMockController.class)
 @EnableConfigurationProperties(PolizasProperties.class)
 @ExtendWith(OutputCaptureExtension.class)
-@DisplayName("CoreMockController (02g C6, C7; RF-07)")
+@DisplayName("CoreMockController")
 class CoreMockControllerTest {
 
     private static final String RUTA = "/core-mock/evento";
@@ -56,7 +56,7 @@ class CoreMockControllerTest {
     }
 
     @Test
-    @DisplayName("C6: evento valido responde 202 {recibido, mensaje, timestamp} y registra [CORE-MOCK] polizaId=555")
+    @DisplayName("evento valido responde 202 {recibido, mensaje, timestamp} y registra [CORE-MOCK] polizaId=555")
     void debeAceptarEventoValidoYRegistrarloEnLog(CapturedOutput salida) throws Exception {
         enviar("{\"evento\":\"ACTUALIZACION\",\"polizaId\":555}")
                 .andExpect(status().isAccepted())
@@ -73,7 +73,7 @@ class CoreMockControllerTest {
     }
 
     @Test
-    @DisplayName("C6: operacion y riesgoId opcionales se aceptan (202) y aparecen en el log junto al correlationId")
+    @DisplayName("operacion y riesgoId opcionales se aceptan (202) y aparecen en el log junto al correlationId")
     void debeRegistrarOperacionYRiesgoOpcionales(CapturedOutput salida) throws Exception {
         mockMvc.perform(post(RUTA).header(API_KEY_HEADER, API_KEY).header("X-Correlation-Id", "corr-c6-opc")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,7 +90,7 @@ class CoreMockControllerTest {
     }
 
     @Test
-    @DisplayName("C7: sin polizaId responde 400 VALIDACION con error en el campo polizaId y no registra [CORE-MOCK]")
+    @DisplayName("sin polizaId responde 400 VALIDACION con error en el campo polizaId y no registra [CORE-MOCK]")
     void debeRechazarEventoSinPolizaId(CapturedOutput salida) throws Exception {
         esperarValidacion(enviar("{\"evento\":\"ACTUALIZACION\"}"), "polizaId");
 
@@ -98,19 +98,19 @@ class CoreMockControllerTest {
     }
 
     @Test
-    @DisplayName("C7: sin evento responde 400 VALIDACION con error en el campo evento")
+    @DisplayName("sin evento responde 400 VALIDACION con error en el campo evento")
     void debeRechazarEventoSinEvento() throws Exception {
         esperarValidacion(enviar("{\"polizaId\":555}"), "evento");
     }
 
     @Test
-    @DisplayName("C7: evento en blanco responde 400 VALIDACION con error en el campo evento")
+    @DisplayName("evento en blanco responde 400 VALIDACION con error en el campo evento")
     void debeRechazarEventoEnBlanco() throws Exception {
         esperarValidacion(enviar("{\"evento\":\"   \",\"polizaId\":555}"), "evento");
     }
 
     @Test
-    @DisplayName("C7: body vacio {} responde 400 con errores en evento y polizaId")
+    @DisplayName("body vacio {} responde 400 con errores en evento y polizaId")
     void debeRechazarBodyVacio() throws Exception {
         enviar("{}")
                 .andExpect(status().isBadRequest())

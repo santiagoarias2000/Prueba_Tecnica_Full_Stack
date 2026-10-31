@@ -6,7 +6,7 @@ import com.prueba.polizas.model.Riesgo;
 public interface RiesgoService {
 
     /**
-     * Cancela un riesgo de una poliza COLECTIVA y recalcula la poliza (RN-09..RN-12).
+     * Cancela un riesgo de una poliza COLECTIVA y recalcula la poliza.
      * 404 {@code RIESGO_NO_ENCONTRADO} si no existe. Publica {@code CambioEstadoEvent} (CANCELAR_RIESGO).
      */
     Riesgo cancelar(Long riesgoId, String motivo);

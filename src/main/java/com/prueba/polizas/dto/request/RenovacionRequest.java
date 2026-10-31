@@ -5,7 +5,7 @@ import jakarta.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
 /**
- * Body opcional de {@code POST /polizas/{id}/renovar} (RF-03).
+ * Body opcional de {@code POST /polizas/{id}/renovar}.
  *
  * @param ipc IPC a aplicar como fraccion (0.0510 = 5,10 %); si es {@code null} se usa {@code polizas.ipc.valor}
  */

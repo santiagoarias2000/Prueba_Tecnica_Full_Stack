@@ -1,4 +1,4 @@
--- Datos semilla ficticios (02d). Consistencia: prima = canon x meses; canon colectiva = suma de riesgos ACTIVOS.
+-- Datos semilla ficticios. Consistencia: prima = canon x meses; canon colectiva = suma de riesgos ACTIVOS.
 -- Ids de riesgo: individuales -> mismo id de su poliza (1, 3, 5); colectivas -> 10.. (poliza 2) y 20.. (poliza 4).
 INSERT INTO poliza (id, numero_poliza, tipo, estado, tomador, fecha_inicio_vigencia, fecha_fin_vigencia,
                     meses_vigencia, valor_canon, valor_prima, version)

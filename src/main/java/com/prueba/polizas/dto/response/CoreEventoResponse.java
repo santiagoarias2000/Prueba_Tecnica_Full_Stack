@@ -1,7 +1,7 @@
 package com.prueba.polizas.dto.response;
 
 /**
- * Respuesta 202 del mock del CORE (RF-07).
+ * Respuesta 202 del mock del CORE.
  *
  * @param recibido  siempre {@code true}
  * @param mensaje   texto informativo

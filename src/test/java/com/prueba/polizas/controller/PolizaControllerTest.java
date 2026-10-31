@@ -57,12 +57,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 /**
- * Casos C1-C5 de 02g para {@link PolizaController}: slice web real (filtros, converters, handler de errores)
+ * Pruebas de {@link PolizaController}: slice web real (filtros, converters, handler de errores)
  * con los services simulados.
  */
 @WebMvcTest(controllers = {PolizaController.class, RiesgoController.class})
 @EnableConfigurationProperties(PolizasProperties.class)
-@DisplayName("PolizaController (02g seccion C)")
+@DisplayName("PolizaController")
 class PolizaControllerTest {
 
     private static final String PROBLEM_JSON = MediaType.APPLICATION_PROBLEM_JSON_VALUE;
@@ -97,12 +97,12 @@ class PolizaControllerTest {
     }
 
     @Nested
-    @DisplayName("GET /polizas/{id} (Extra EX-01)")
+    @DisplayName("GET /polizas/{id}")
     class Obtener {
 
         @ParameterizedTest(name = "{0}")
         @CsvSource({"/polizas/2"})
-        @DisplayName("Poliza existente responde 200 con el mismo contrato de RF-01")
+        @DisplayName("Poliza existente responde 200 con el mismo contrato del listado")
         void debeDevolverDetalle(String ruta) throws Exception {
             when(polizaService.obtener(2L)).thenReturn(new PolizaConConteo(Fixtures.polizaColectiva2(), 2));
 
@@ -134,11 +134,11 @@ class PolizaControllerTest {
     }
 
     @Nested
-    @DisplayName("GET /polizas (RF-01)")
+    @DisplayName("GET /polizas")
     class Listar {
 
         @Test
-        @DisplayName("C1: tipo=COLECTIVA&estado=ACTIVA responde 200 con array y pasa los enums al service")
+        @DisplayName("tipo=COLECTIVA&estado=ACTIVA responde 200 con array y pasa los enums al service")
         void debeListarPolizasFiltrandoPorTipoYEstado() throws Exception {
             when(polizaService.listar(TipoPoliza.COLECTIVA, EstadoPoliza.ACTIVA))
                     .thenReturn(List.of(new PolizaConConteo(Fixtures.polizaColectiva2(), 2)));
@@ -195,7 +195,7 @@ class PolizaControllerTest {
         }
 
         @Test
-        @DisplayName("C2: tipo=XYZ responde 400 PARAMETRO_INVALIDO sin invocar al service")
+        @DisplayName("tipo=XYZ responde 400 PARAMETRO_INVALIDO sin invocar al service")
         void debeRechazarTipoInvalido() throws Exception {
             esperarProblema(ejecutar(get("/polizas").param("tipo", "XYZ")), 400, "Solicitud inválida",
                     "PARAMETRO_INVALIDO", "/polizas")
@@ -217,7 +217,7 @@ class PolizaControllerTest {
     }
 
     @Nested
-    @DisplayName("GET /polizas/{id}/riesgos (RF-02)")
+    @DisplayName("GET /polizas/{id}/riesgos")
     class ListarRiesgos {
 
         @Test
@@ -243,7 +243,7 @@ class PolizaControllerTest {
         }
 
         @Test
-        @DisplayName("C5: poliza inexistente responde 404 POLIZA_NO_ENCONTRADA")
+        @DisplayName("poliza inexistente responde 404 POLIZA_NO_ENCONTRADA")
         void debeResponder404CuandoLaPolizaNoExiste() throws Exception {
             when(polizaService.listarRiesgos(999L)).thenThrow(new RecursoNoEncontradoException(
                     CodigoError.POLIZA_NO_ENCONTRADA, "No existe la poliza 999"));
@@ -263,7 +263,7 @@ class PolizaControllerTest {
     }
 
     @Nested
-    @DisplayName("POST /polizas/{id}/renovar (RF-03)")
+    @DisplayName("POST /polizas/{id}/renovar")
     class Renovar {
 
         @Test
@@ -323,7 +323,7 @@ class PolizaControllerTest {
         }
 
         @Test
-        @DisplayName("C5: poliza cancelada responde 409 POLIZA_CANCELADA_NO_RENOVABLE (title 'Estado inválido')")
+        @DisplayName("poliza cancelada responde 409 POLIZA_CANCELADA_NO_RENOVABLE (title 'Estado inválido')")
         void debeRechazarRenovacionCuandoPolizaEstaCancelada() throws Exception {
             when(polizaService.renovar(eq(3L), isNull())).thenThrow(new EstadoInvalidoException(
                     CodigoError.POLIZA_CANCELADA_NO_RENOVABLE,
@@ -335,7 +335,7 @@ class PolizaControllerTest {
         }
 
         @Test
-        @DisplayName("C5: poliza inexistente responde 404 POLIZA_NO_ENCONTRADA")
+        @DisplayName("poliza inexistente responde 404 POLIZA_NO_ENCONTRADA")
         void debeResponder404AlRenovarPolizaInexistente() throws Exception {
             when(polizaService.renovar(eq(999L), isNull())).thenThrow(new RecursoNoEncontradoException(
                     CodigoError.POLIZA_NO_ENCONTRADA, "No existe la poliza 999"));
@@ -371,7 +371,7 @@ class PolizaControllerTest {
     }
 
     @Nested
-    @DisplayName("POST /polizas/{id}/cancelar (RF-04)")
+    @DisplayName("POST /polizas/{id}/cancelar")
     class Cancelar {
 
         @Test
@@ -410,7 +410,7 @@ class PolizaControllerTest {
         }
 
         @Test
-        @DisplayName("C5: poliza ya cancelada responde 409 POLIZA_YA_CANCELADA")
+        @DisplayName("poliza ya cancelada responde 409 POLIZA_YA_CANCELADA")
         void debeRechazarCancelarPolizaYaCancelada() throws Exception {
             when(polizaService.cancelar(eq(3L), isNull())).thenThrow(new EstadoInvalidoException(
                     CodigoError.POLIZA_YA_CANCELADA, "La poliza IND-2026-0002 ya se encuentra cancelada"));
@@ -432,7 +432,7 @@ class PolizaControllerTest {
     }
 
     @Nested
-    @DisplayName("POST /polizas/{id}/riesgos (RF-05)")
+    @DisplayName("POST /polizas/{id}/riesgos")
     class AgregarRiesgo {
 
         private static final String BODY_VALIDO = """
@@ -444,7 +444,7 @@ class PolizaControllerTest {
                 }""";
 
         @Test
-        @DisplayName("C3: canon negativo y campos vacios responden 400 VALIDACION con errores[] por campo")
+        @DisplayName("canon negativo y campos vacios responden 400 VALIDACION con errores[] por campo")
         void debeRechazarBodyInvalido() throws Exception {
             String body = """
                     {"descripcion": "", "arrendatario": "   ", "valorCanon": -100}""";
@@ -498,7 +498,7 @@ class PolizaControllerTest {
         }
 
         @Test
-        @DisplayName("C4: body valido responde 201 + Location /riesgos/{id} + riesgo creado")
+        @DisplayName("body valido responde 201 + Location /riesgos/{id} + riesgo creado")
         void debeCrearRiesgoEnPolizaColectiva() throws Exception {
             Poliza poliza = Fixtures.polizaColectiva2();
             Riesgo creado = Fixtures.conId(poliza.agregarRiesgo("Apto 502 - Calle 100 # 10-20, Bogotá",
@@ -527,7 +527,7 @@ class PolizaControllerTest {
         }
 
         @Test
-        @DisplayName("C5: poliza individual responde 422 TIPO_POLIZA_NO_PERMITE_RIESGOS (title 'Regla de negocio')")
+        @DisplayName("poliza individual responde 422 TIPO_POLIZA_NO_PERMITE_RIESGOS (title 'Regla de negocio')")
         void debeRechazarRiesgoEnPolizaIndividual() throws Exception {
             when(polizaService.agregarRiesgo(eq(1L), any())).thenThrow(new ReglaNegocioException(
                     CodigoError.TIPO_POLIZA_NO_PERMITE_RIESGOS, "Solo las polizas colectivas permiten agregar riesgos"));
@@ -538,7 +538,7 @@ class PolizaControllerTest {
         }
 
         @Test
-        @DisplayName("C5: poliza cancelada responde 409 POLIZA_CANCELADA")
+        @DisplayName("poliza cancelada responde 409 POLIZA_CANCELADA")
         void debeRechazarRiesgoEnPolizaCancelada() throws Exception {
             when(polizaService.agregarRiesgo(eq(3L), any())).thenThrow(new EstadoInvalidoException(
                     CodigoError.POLIZA_CANCELADA, "No se puede agregar un riesgo a una poliza cancelada"));
@@ -548,7 +548,7 @@ class PolizaControllerTest {
         }
 
         @Test
-        @DisplayName("C5: poliza inexistente responde 404 POLIZA_NO_ENCONTRADA")
+        @DisplayName("poliza inexistente responde 404 POLIZA_NO_ENCONTRADA")
         void debeResponder404AlAgregarRiesgoAPolizaInexistente() throws Exception {
             when(polizaService.agregarRiesgo(anyLong(), any())).thenThrow(new RecursoNoEncontradoException(
                     CodigoError.POLIZA_NO_ENCONTRADA, "No existe la poliza 999"));

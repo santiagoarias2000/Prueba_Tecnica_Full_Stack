@@ -14,7 +14,7 @@ import org.springframework.web.client.RestClient;
 
 /**
  * Adapter HTTP del {@link CoreEdicionPort}: {@code POST {polizas.core.url}{polizas.core.path}} con los headers
- * de API key y {@code X-Correlation-Id}. Nunca relanza: un fallo del CORE solo se registra (RN-15).
+ * de API key y {@code X-Correlation-Id}. Nunca relanza: un fallo del CORE solo se registra.
  *
  * <p>Si {@code polizas.core.url} esta vacia, apunta al mock local resolviendo el puerto real del servidor
  * en cada envio ({@code local.server.port}), lo que funciona tanto con {@code server.port=8080} como con

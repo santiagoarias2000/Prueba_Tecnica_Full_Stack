@@ -38,7 +38,7 @@ public class RiesgoServiceImpl implements RiesgoService {
         poliza.cancelarRiesgo(riesgo, motivo);
         log.info("Riesgo {} de la poliza {} cancelado", riesgoId, poliza.getId());
         if (poliza.getTipo() == TipoPoliza.COLECTIVA && poliza.cantidadRiesgosActivos() == 0) {
-            log.warn("La poliza colectiva {} quedo sin riesgos activos; no se cancela automaticamente (S7)",
+            log.warn("La poliza colectiva {} quedo sin riesgos activos; no se cancela automaticamente",
                     poliza.getId());
         }
         publisher.publishEvent(new CambioEstadoEvent(poliza.getId(), riesgoId, OperacionCore.CANCELAR_RIESGO));

@@ -4,7 +4,7 @@ import com.prueba.polizas.model.enums.OperacionCore;
 import java.util.Objects;
 
 /**
- * Evento de aplicacion publicado por los services tras un cambio de estado exitoso (RN-15).
+ * Evento de aplicacion publicado por los services tras un cambio de estado exitoso.
  * Se notifica al CORE despues del commit.
  *
  * @param polizaId  poliza afectada

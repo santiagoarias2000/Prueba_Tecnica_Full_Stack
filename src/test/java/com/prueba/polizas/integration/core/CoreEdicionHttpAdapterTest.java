@@ -30,9 +30,9 @@ import org.springframework.mock.env.MockEnvironment;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
-/** Adapter HTTP hacia el CORE (02e, RN-15): forma de la peticion y tolerancia a fallos. */
+/** Adapter HTTP hacia el CORE: forma de la peticion y tolerancia a fallos. */
 @ExtendWith(OutputCaptureExtension.class)
-@DisplayName("CoreEdicionHttpAdapter (02e, RN-15)")
+@DisplayName("CoreEdicionHttpAdapter")
 class CoreEdicionHttpAdapterTest {
 
     private static final String URL_MOCK_LOCAL = "http://localhost:8080/core-mock/evento";
@@ -118,7 +118,7 @@ class CoreEdicionHttpAdapterTest {
     }
 
     @Test
-    @DisplayName("RN-15: un 500 del CORE se registra en ERROR [CORE-ADAPTER] y no se propaga")
+    @DisplayName("un 500 del CORE se registra en ERROR [CORE-ADAPTER] y no se propaga")
     void noDebePropagarError500(CapturedOutput salida) {
         CoreEdicionHttpAdapter adapter = adapterMockLocal();
         server.expect(requestTo(URL_MOCK_LOCAL)).andRespond(withServerError());
@@ -132,7 +132,7 @@ class CoreEdicionHttpAdapterTest {
     }
 
     @Test
-    @DisplayName("RN-15: un IOException (CORE inalcanzable) se registra en ERROR y no se propaga")
+    @DisplayName("un IOException (CORE inalcanzable) se registra en ERROR y no se propaga")
     void noDebePropagarIoException(CapturedOutput salida) {
         CoreEdicionHttpAdapter adapter = adapterMockLocal();
         server.expect(requestTo(URL_MOCK_LOCAL)).andRespond(withException(new IOException("Connection refused")));

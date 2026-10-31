@@ -35,7 +35,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 /**
- * Casos E7 y E8 de 02g: integracion con el CORE de punta a punta (servidor real en puerto aleatorio).
+ * Integracion con el CORE de punta a punta (servidor real en puerto aleatorio).
  * El spy envuelve al adapter real, de modo que tambien se ejerce el flujo HTTP real hacia {@code /core-mock/evento}.
  * Cada test usa una base H2 propia y un contexto nuevo ({@link DirtiesContext}) para no depender del orden.
  */
@@ -43,7 +43,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
         properties = "spring.datasource.url=jdbc:h2:mem:core-it-${random.uuid}")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @ExtendWith(OutputCaptureExtension.class)
-@DisplayName("Integracion CORE (02g E7, E8; RN-15)")
+@DisplayName("Integracion CORE")
 class CoreIntegracionTest {
 
     private static final String API_KEY = "123456";
@@ -100,7 +100,7 @@ class CoreIntegracionTest {
     }
 
     @Test
-    @DisplayName("E7: renovar la poliza 1 notifica 1 vez RENOVAR_POLIZA (polizaId=1, riesgoId=null) y llega al mock")
+    @DisplayName("renovar la poliza 1 notifica 1 vez RENOVAR_POLIZA (polizaId=1, riesgoId=null) y llega al mock")
     void renovarNotificaUnaVez(CapturedOutput salida) {
         ResponseEntity<JsonNode> respuesta = post("/polizas/1/renovar", null, "e7-renovar");
 
@@ -114,7 +114,7 @@ class CoreIntegracionTest {
     }
 
     @Test
-    @DisplayName("E7: cancelar la poliza 2 notifica 1 vez CANCELAR_POLIZA (polizaId=2, riesgoId=null)")
+    @DisplayName("cancelar la poliza 2 notifica 1 vez CANCELAR_POLIZA (polizaId=2, riesgoId=null)")
     void cancelarPolizaNotificaUnaVez(CapturedOutput salida) {
         ResponseEntity<JsonNode> respuesta = post("/polizas/2/cancelar",
                 "{\"motivo\":\"Solicitud del tomador\"}", "e7-cancelar-poliza");
@@ -128,7 +128,7 @@ class CoreIntegracionTest {
     }
 
     @Test
-    @DisplayName("E7: agregar riesgo a la poliza 2 notifica 1 vez AGREGAR_RIESGO con el id del riesgo creado")
+    @DisplayName("agregar riesgo a la poliza 2 notifica 1 vez AGREGAR_RIESGO con el id del riesgo creado")
     void agregarRiesgoNotificaUnaVez(CapturedOutput salida) {
         ResponseEntity<JsonNode> respuesta = post("/polizas/2/riesgos",
                 "{\"descripcion\":\"Apto 502 - Calle 100 # 10-20, Bogotá\",\"arrendatario\":\"Luis Martínez\","
@@ -140,7 +140,7 @@ class CoreIntegracionTest {
         assertThat(unicoPayloadNotificado())
                 .isEqualTo(new CoreEventoPayload("ACTUALIZACION", 2L, OperacionCore.AGREGAR_RIESGO, riesgoId));
         esperarParejaEnLog(salida, "e7-agregar-riesgo", "2", "AGREGAR_RIESGO", String.valueOf(riesgoId));
-        // RN-12: 2.000.000 + 1.200.000 + 1.800.000 = 5.000.000 x 6 meses
+        // 2.000.000 + 1.200.000 + 1.800.000 = 5.000.000 x 6 meses
         assertThat(polizaRepository.findById(2L)).hasValueSatisfying(p -> {
             assertThat(p.getValorCanon()).isEqualByComparingTo("5000000.00");
             assertThat(p.getValorPrima()).isEqualByComparingTo("30000000.00");
@@ -148,7 +148,7 @@ class CoreIntegracionTest {
     }
 
     @Test
-    @DisplayName("E7: cancelar el riesgo 21 (poliza 4) notifica 1 vez CANCELAR_RIESGO (polizaId=4, riesgoId=21)")
+    @DisplayName("cancelar el riesgo 21 (poliza 4) notifica 1 vez CANCELAR_RIESGO (polizaId=4, riesgoId=21)")
     void cancelarRiesgoNotificaUnaVez(CapturedOutput salida) {
         ResponseEntity<JsonNode> respuesta = post("/riesgos/21/cancelar",
                 "{\"motivo\":\"Terminación del contrato\"}", "e7-cancelar-riesgo");
@@ -161,7 +161,7 @@ class CoreIntegracionTest {
     }
 
     @Test
-    @DisplayName("E7: renovar la poliza 3 (CANCELADA) responde 409 y no notifica al CORE")
+    @DisplayName("renovar la poliza 3 (CANCELADA) responde 409 y no notifica al CORE")
     void operacionFallidaPorReglaNoNotifica(CapturedOutput salida) {
         ResponseEntity<JsonNode> respuesta = post("/polizas/3/renovar", null, "e7-409");
 
@@ -172,7 +172,7 @@ class CoreIntegracionTest {
     }
 
     @Test
-    @DisplayName("E7: agregar riesgo a la poliza individual 1 responde 422 y no notifica al CORE")
+    @DisplayName("agregar riesgo a la poliza individual 1 responde 422 y no notifica al CORE")
     void operacionRechazada422NoNotifica(CapturedOutput salida) {
         ResponseEntity<JsonNode> respuesta = post("/polizas/1/riesgos",
                 "{\"descripcion\":\"Local 1\",\"arrendatario\":\"A\",\"arrendador\":\"B\",\"valorCanon\":1000000}",
@@ -185,7 +185,7 @@ class CoreIntegracionTest {
     }
 
     @Test
-    @DisplayName("E8: si el puerto del CORE lanza RuntimeException, renovar responde 200 y el cambio persiste")
+    @DisplayName("si el puerto del CORE lanza RuntimeException, renovar responde 200 y el cambio persiste")
     void falloDelCoreNoAfectaLaOperacion(CapturedOutput salida) {
         doThrow(new IllegalStateException("CORE caido")).when(coreEdicionPort).notificar(any());
 

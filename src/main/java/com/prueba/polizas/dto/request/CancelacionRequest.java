@@ -3,7 +3,7 @@ package com.prueba.polizas.dto.request;
 import jakarta.validation.constraints.Size;
 
 /**
- * Body opcional de las cancelaciones de poliza y de riesgo (RF-04, RF-06).
+ * Body opcional de las cancelaciones de poliza y de riesgo.
  *
  * @param motivo motivo de la cancelacion (opcional)
  */
